@@ -4,9 +4,16 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace = "com.hwan.proc.dao.UserDao">
 
-	<sql id
+	<sql id = "hw">
+		<if test = "id!=null and id!=''">
+			id = #{id}
+		</if>
+	</sql>
 	<select id='search'				parameterType="string"		resultType="User">
-		select * from user where id = #{id}
+		select * from user
+		<where>
+			<include refid = "hw"/>
+		</where> 
 	</select>
 
 </mapper>

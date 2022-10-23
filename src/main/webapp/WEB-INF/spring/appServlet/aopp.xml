@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+		
+	<!-- Aspect를 bean으로 등록한다. -->
+	<bean id='helloAop'			class="com.hwan.proc.aop.HelloAop"/>
+	<bean id='timeAop'			class="com.hwan.proc.aop.TimeAop"/>
+	
+	
+	
+	<!-- aop 설정
+		1. aop를 위한 namespace 추가 하기 
+		2. <aop:config></aop:config> 태그로 aop 설정 
+	 -->
+	 <aop:config>
+	 	<!--
+	 	    <aop:pointcut/>  태그로 pointcut을 설정하면 여러 Aspect에서 재사용할 수 있다. 
+	 		expression="execution(aspectj 표현식)"
+	 		id ='식별 가능한 이름'
+	 	 -->
+	 	<aop:pointcut 	expression="execution( * com.ssafy.book.model.service.*Service.select(..))" 
+	 					id="searchPC"/>
+	 					
+		<!--
+			<aop:aspect></aop:aspect>  태그로 aspect 지정 
+			   ref : aspect로 사용할 bean의 id
+		  --> 					
+	 	<aop:aspect  ref='helloAop'>
+	 		<!--  Advice 설정  
+	 			<aop:시점   />
+	 			 method='공통모듈 메서드 이름'
+	 			 pointcut='지정한 시점에서 사용할 aspectj 표현식 , 재사용이 안됨'		
+	 			 pointcut-ref='미리 등록한 pointcut의 id'
+	 		-->
+	 		<aop:before method="hello"		pointcut-ref="searchPC"/>
+	 	</aop:aspect>			
+	 	
+	 	<aop:aspect	ref='timeAop'>
+	 		<aop:around method="calc"		pointcut-ref="searchPC"/>
+	 	</aop:aspect>	
+	 </aop:config>
+</beans>
